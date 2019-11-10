@@ -233,6 +233,12 @@
             <version>5.5.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.sandec</groupId>
+            <artifactId>JMemoryBuddy</artifactId>
+            <version>0.1.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
