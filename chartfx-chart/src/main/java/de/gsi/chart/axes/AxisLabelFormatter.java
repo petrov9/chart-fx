@@ -1,5 +1,6 @@
 package de.gsi.chart.axes;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import de.gsi.chart.axes.spi.format.DefaultTickUnitSupplier;
@@ -63,4 +64,15 @@ public interface AxisLabelFormatter {
      */
     void updateFormatter(List<Double> newMajorTickMarks, double unitScaling);
 
+    default void setHolidaysExclude(boolean isHolidaysExclude) {
+        throw new RuntimeException("Method not implemented");
+    }
+
+    default void setLowerTime(LocalTime lowerTime) {
+        throw new RuntimeException("Method not implemented");
+    }
+
+    default void setUpperTime(LocalTime upperTime) {
+        throw new RuntimeException("Method not implemented");
+    }
 }

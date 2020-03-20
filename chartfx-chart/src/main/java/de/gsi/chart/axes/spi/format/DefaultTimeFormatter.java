@@ -1,6 +1,7 @@
 package de.gsi.chart.axes.spi.format;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -16,11 +17,16 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public class DefaultTimeFormatter extends AbstractFormatter {
     private static final TickUnitSupplier DEFAULT_TICK_UNIT_SUPPLIER = new DefaultTimeTickUnitSupplier();
-    private static final DateTimeFormatter HIGHRES_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss +SSS",
-            Locale.ENGLISH);
+    private static final DateTimeFormatter HIGHRES_FORMATTER = DateTimeFormatter.ofPattern("HH:mm",
+        Locale.ENGLISH);
     protected final DateTimeFormatter[] dateFormat;
     protected int oldIndex = -1;
     protected int formatterIndex;
+    protected boolean isHolidaysExclude;
+    protected LocalTime lowerTime;
+    protected LocalTime upperTime;
+    private static final int SATURDAY = 6;
+    private static final int SUNDAY = 7;
 
     protected ObjectProperty<ZoneOffset> timeZone = new SimpleObjectProperty<>(ZoneOffset.UTC);
 
@@ -69,7 +75,7 @@ public class DefaultTimeFormatter extends AbstractFormatter {
     }
 
     public String getCurrentLocalDateTimeStamp() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     private String getTimeString(final Number utcValueSeconds) {
@@ -86,7 +92,40 @@ public class DefaultTimeFormatter extends AbstractFormatter {
         final LocalDateTime dateTime = LocalDateTime.ofEpochSecond(longUTCSeconds, nanoSeconds,
                 getTimeZoneOffset());
 
-        return dateTime.format(dateFormat[formatterIndex]).replaceAll(" ", System.lineSeparator());
+
+        if (isHolidaysExclude) {
+            int weekDay = dateTime.getDayOfWeek().getValue();
+
+            // 6 - Saturday, 7 - Sunday
+            if (weekDay == 6 || weekDay == 7) {
+                return null;
+            }
+        }
+
+        if (lowerTime != null && dateTime.toLocalTime().compareTo(lowerTime) < 0) {
+            return null;
+        }
+
+        if (upperTime != null && dateTime.toLocalTime().compareTo(upperTime) > 0) {
+            return null;
+        }
+
+        return dateTime.format(dateFormat[formatterIndex]).replaceAll(" ", /*System.lineSeparator()*/ " ");
+    }
+
+    @Override
+    public void setHolidaysExclude(boolean isHolidaysExclude) {
+        this.isHolidaysExclude = isHolidaysExclude;
+    }
+
+    @Override
+    public void setLowerTime(LocalTime lowerTime) {
+        this.lowerTime = lowerTime;
+    }
+
+    @Override
+    public void setUpperTime(LocalTime upperTime) {
+        this.upperTime = upperTime;
     }
 
     /**

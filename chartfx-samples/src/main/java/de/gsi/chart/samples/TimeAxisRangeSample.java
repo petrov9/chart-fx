@@ -1,5 +1,6 @@
 package de.gsi.chart.samples;
 
+import java.time.LocalTime;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -32,28 +33,32 @@ public class TimeAxisRangeSample extends Application {
         final VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
 
-        final TimeAxis xAxis1 = new TimeAxis("standard time axis", now - 3600, now, 3600 / 10);
+        final TimeAxis xAxis1 = new TimeAxis("standard time axis", now - 600000, now - 100000,  3600 / 10);
+        xAxis1.getAxisLabelFormatter().setHolidaysExclude(true);
+//        xAxis1.setLogAxis(true);
+        xAxis1.getAxisLabelFormatter().setLowerTime(LocalTime.of(9, 0));
+        xAxis1.getAxisLabelFormatter().setUpperTime(LocalTime.of(20, 0));
         root.getChildren().add(xAxis1);
 
         final TimeAxis xAxis2 = new TimeAxis("inverted time axis", now - 3600, now, 3600 / 10);
         xAxis2.invertAxis(true);
-        root.getChildren().add(xAxis2);
+//        root.getChildren().add(xAxis2);
 
         final double[] ranges = { 0.1, 1.0, 10.0, 30.0, 3600.0, 3600 * 24, 3600 * 24 * 31 * 3, 3600 * 24 * 31 * 60 };
         for (int i = 0; i < ranges.length; i++) {
             final double range = ranges[i];
             final TimeAxis axis = new TimeAxis("time axis - range = " + range + " s", now - range, now, range / 10);
-            root.getChildren().add(axis);
+//            root.getChildren().add(axis);
         }
 
         // example for dynamic scaling with metric prefix and unit
         final TimeAxis xAxisDyn = new TimeAxis("dynamic time axis", now - 1e-3, now, 1);
         xAxisDyn.setMinorTickCount(10);
         xAxisDyn.setAutoRangeRounding(false);
-        root.getChildren().add(xAxisDyn);
+//        root.getChildren().add(xAxisDyn);
 
         final Label xAxis9Text = new Label();
-        root.getChildren().add(xAxis9Text);
+//        root.getChildren().add(xAxis9Text);
 
         final Timer timer = new Timer();
         final TimerTask task = new TimerTask() {

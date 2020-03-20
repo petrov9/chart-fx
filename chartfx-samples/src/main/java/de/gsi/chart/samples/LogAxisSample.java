@@ -39,7 +39,7 @@ public class LogAxisSample extends Application {
 
         final DoubleDataSet dataSet1 = new DoubleDataSet("data set #1");
         final DoubleDataSet dataSet2 = new DoubleDataSet("data set #2");
-        final DoubleDataSet dataSet3 = new DoubleDataSet("data set #2");
+        final DoubleDataSet dataSet3 = new DoubleDataSet("data set #3");
         chart.getDatasets().addAll(dataSet1, dataSet2, dataSet3);
 
         // classic way of adding data points

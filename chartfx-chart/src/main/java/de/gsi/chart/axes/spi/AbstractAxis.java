@@ -1,5 +1,6 @@
 package de.gsi.chart.axes.spi;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -622,10 +623,22 @@ public abstract class AbstractAxis extends AbstractAxisParameter implements Axis
             maxLabelWidth = 0;
         }
 
+//        List<Double> emptyPositions = new ArrayList<>();
         newTickValues.forEach(newValue -> {
-            final double tickPosition = getDisplayPosition(newValue.doubleValue());
-            final TickMark tick = getNewTickMark(newValue, tickPosition,
-                    majorTickMark ? getTickMarkLabel(newValue.doubleValue()) : "");
+            double value = newValue.doubleValue();
+
+            String tickMarkLabel = majorTickMark ? getTickMarkLabel(newValue.doubleValue()) : "";
+            if (tickMarkLabel == null) {
+//                emptyPositions.add(newValue);
+                return;
+            }/* else if (!emptyPositions.isEmpty()) {
+                emptyPositions.add(newValue);
+                value = emptyPositions.remove(0);
+            }*/
+
+            double tickPosition = getDisplayPosition(value);
+
+            final TickMark tick = getNewTickMark(newValue, tickPosition, tickMarkLabel);
 
             if (majorTickMark && shouldAnimate()) {
                 tick.setOpacity(0);

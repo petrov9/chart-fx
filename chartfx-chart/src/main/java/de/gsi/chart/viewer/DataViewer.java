@@ -54,6 +54,11 @@ public class DataViewer extends BorderPane {
     private final ObservableList<Node> userToolBarItems = FXCollections.observableList(new NoDuplicatesList<Node>());
     private final BooleanProperty showListStyleDataViews = new SimpleBooleanProperty(this, "listStyleViews", false);
 
+    public static final int HBOX_VIEW = 0;
+    public static final int VBOX_VIEW = 1;
+    public static final int GRID_VIEW = 2;
+    public static final int MAX_VIEW = 3;
+
     // private final VisibleViewerPane visibleViewerPane = new VisibleViewerPane();
     // private final VBox viewerPane;
 
@@ -185,8 +190,9 @@ public class DataViewer extends BorderPane {
         selectedViewProperty().set(selectedView);
     }
 
-    public final void setSelectedView(final String viewName) {
-        setSelectedView(viewName);
+    public final void setSelectedView(final int viewDim) {
+        DataView dataView = getSelectedView().getSubDataViews().get(viewDim);
+        getSelectedView().setView(dataView);
     }
 
     public void setWindowDecorationVisible(final boolean state) {

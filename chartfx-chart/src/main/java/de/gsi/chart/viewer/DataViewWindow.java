@@ -4,6 +4,8 @@
 
 package de.gsi.chart.viewer;
 
+import de.gsi.dataset.DataSet;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.slf4j.Logger;
@@ -385,8 +387,18 @@ public class DataViewWindow extends BorderPane {
         final long start = ProcessingProfiler.getTimeStamp();
         super.layoutChildren();
         if (getContent() instanceof Chart) {
+            Chart chart = ((Chart) getContent());
+            List<DataSet> datasets = chart.getDatasets();
+            String dataSetName = "NO_DATASET";
+
+            if (!datasets.isEmpty()) {
+                dataSetName = datasets.get(0).getName();
+            } else if (!(datasets = chart.getRenderers().get(0).getDatasets()).isEmpty()) {
+                dataSetName = datasets.get(0).getName();
+            }
+
             ProcessingProfiler.getTimeDiff(start,
-                    "pane updated with data set = " + ((Chart) getContent()).getDatasets().get(0).getName());
+                "pane updated with data set = " + dataSetName);
         }
     }
 

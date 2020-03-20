@@ -112,6 +112,7 @@ public class DataViewerSample extends Application {
         final DataViewer viewer = new DataViewer();
         viewer.getViews().addAll(view1, view2);
         viewer.setExplorerVisible(true);
+        viewer.setSelectedView(DataViewer.VBOX_VIEW);
 
         final XYChart energyChart = new TestChart();
         energyChart.getYAxis().setName("Energy");
@@ -121,11 +122,11 @@ public class DataViewerSample extends Application {
         currentChart.getRenderers().clear();
         final ErrorDataSetRenderer errorDataSetRenderer = new ErrorDataSetRenderer();
         errorDataSetRenderer.setErrorType(ErrorStyle.NONE);
+        errorDataSetRenderer.getDatasets().addAll(createSeries());
         currentChart.getRenderers().add(errorDataSetRenderer);
         ((Region) currentChart.getYAxis()).lookup(".axis-label").setStyle("-fx-text-fill: green;");
         currentChart.getYAxis().setName("Current");
         currentChart.getYAxis().setSide(Side.RIGHT);
-        currentChart.getDatasets().addAll(createSeries());
 
         final DataViewWindow currentView = new DataViewWindow(view1, "Current", currentChart);
 
@@ -171,7 +172,7 @@ public class DataViewerSample extends Application {
 
         viewer.getUserToolBarItems().addAll(newView, listView, windowDeco, closeDeco, new Separator());
         final Scene scene = new Scene(
-                new VBox(viewer.getToolBar(), viewer, new HBox(new Label("focus on: "), focusedOwner)), 800, 600);
+            new VBox(viewer.getToolBar(), viewer, new HBox(new Label("focus on: "), focusedOwner)), 800, 600);
         scene.focusOwnerProperty().addListener((ch, o, n) -> {
             if (n == null) {
                 focusedOwner.setText(null);
